@@ -44,7 +44,7 @@ void ReadDataFromFile(std::string const &fileName, Data &data)
 	std::getline(inputFile, data.studentsInLine);
 }
 
-int CountingNumberGroups(Data const &pData, bool &personsEqually)
+int CountingNumberGroups(Data const &pData, bool &personsEqually, int &difference)
 {
 	int numberBoys = 0;
 	int numberGirls = 0;
@@ -59,6 +59,7 @@ int CountingNumberGroups(Data const &pData, bool &personsEqually)
 			++numberBoys;
 		}
 	}
+	difference = abs(numberBoys - numberGirls);
 	if (numberBoys == numberGirls)
 	{
 		personsEqually = true;
@@ -69,25 +70,26 @@ int CountingNumberGroups(Data const &pData, bool &personsEqually)
 int CountingNumberGroupsOptions(Data const &pData)
 {
 	bool personsEqually = false;
-	int numberPairs = CountingNumberGroups(pData, personsEqually);
+	int difference;
+	int numberPairs = CountingNumberGroups(pData, personsEqually, difference);
 	int numberOptions = 0;
 	for (size_t i = numberPairs; i != 0; --i)
 	{
-		if (i == numberPairs && personsEqually)
+		/*if (i == numberPairs)
 		{
 			numberOptions += i;
-		}
-		else if (i == numberPairs && !personsEqually)
+		}*/
+		if (i == numberPairs)
 		{
-			numberOptions += i + 1;
+			numberOptions += i + difference;
 		}
 		else if (i == 1)
 		{
-			numberOptions += 1;
+			numberOptions += 1 + difference;
 		}
 		else
 		{
-			numberOptions += i * (i - 1);
+			numberOptions += i * (i - 1) + i * difference;
 		}
 	}
 	return numberOptions;
