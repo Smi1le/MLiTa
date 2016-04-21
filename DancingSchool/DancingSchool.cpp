@@ -27,8 +27,8 @@ bab            abbababa
 
 struct Data
 {
-	unsigned numberPupils;
-	std::string studentsInLine;
+	unsigned pupilsNumber;
+	std::string inLineStudents;
 };
 
 void ReadDataFromFile(std::string const &fileName, Data &data)
@@ -38,61 +38,50 @@ void ReadDataFromFile(std::string const &fileName, Data &data)
 	{
 		throw(std::logic_error("File was not opened!"));
 	}
-	std::string tNumber;
-	std::getline(inputFile, tNumber);
-	data.numberPupils = static_cast<unsigned>(atoi(tNumber.c_str()));
-	std::getline(inputFile, data.studentsInLine);
+	inputFile >> data.pupilsNumber;
+	inputFile >> data.inLineStudents;
 }
 
-int CountingNumberGroups(Data const &pData, bool &personsEqually, int &difference)
+int GetNumberPairs(Data const &data, int &difference)
 {
-	int numberBoys = 0;
-	int numberGirls = 0;
-	for (auto element : pData.studentsInLine)
+	int boysNumber = 0;
+	int girlsNumber = 0;
+	for (auto element : data.inLineStudents)
 	{
 		if (toupper(element) == 'A')
 		{
-			++numberGirls;
+			++girlsNumber;
 		}
 		if (toupper(element) == 'B')
 		{
-			++numberBoys;
+			++boysNumber;
 		}
 	}
-	difference = abs(numberBoys - numberGirls);
-	if (numberBoys == numberGirls)
-	{
-		personsEqually = true;
-	}
-	return numberBoys >= numberGirls ? numberGirls : numberBoys;
+	difference = abs(boysNumber - girlsNumber);
+	return boysNumber >= girlsNumber ? girlsNumber : boysNumber;
 }
 
-int CountingNumberGroupsOptions(Data const &pData)
+int GetNumberOptions(Data const &data)
 {
-	bool personsEqually = false;
 	int difference;
-	int numberPairs = CountingNumberGroups(pData, personsEqually, difference);
-	int numberOptions = 0;
-	for (size_t i = numberPairs; i != 0; --i)
+	int pairsNumber = GetNumberPairs(data, difference);
+	size_t optionsNumber = 0;
+	for (size_t i = pairsNumber; i != 0; --i)
 	{
-		/*if (i == numberPairs)
+		if (i == pairsNumber)
 		{
-			numberOptions += i;
-		}*/
-		if (i == numberPairs)
-		{
-			numberOptions += i + difference;
+			optionsNumber += i + static_cast<size_t>(difference);
 		}
 		else if (i == 1)
 		{
-			numberOptions += 1 + difference;
+			optionsNumber += 1 + difference;
 		}
 		else
 		{
-			numberOptions += i * (i - 1) + i * difference;
+			optionsNumber += i * (i - 1) + i * difference;
 		}
 	}
-	return numberOptions;
+	return static_cast<int>(optionsNumber);
 }
 
 void OutputInFile(std::string const &nameFile, int numberOptions)
@@ -100,6 +89,16 @@ void OutputInFile(std::string const &nameFile, int numberOptions)
 	std::ofstream outputFile(nameFile);
 	outputFile << numberOptions;
 }
+
+void InputValidation(Data const &data)
+{
+	if (data.pupilsNumber >= 1 && data.pupilsNumber <= 106 || 
+		data.inLineStudents.length() != data.pupilsNumber)
+	{
+		throw(std::invalid_argument("It was entered wrong data"));
+	}
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -112,13 +111,15 @@ int main(int argc, char *argv[])
 	{
 		std::string inputFileName = argv[1];
 		std::string outputFileName = argv[2];
-		Data pData;
-		ReadDataFromFile(inputFileName, pData);
-		OutputInFile(outputFileName, CountingNumberGroupsOptions(pData));
+		Data data;
+		InputValidation(data);
+		ReadDataFromFile(inputFileName, data);
+		OutputInFile(outputFileName, GetNumberOptions(data));
 	}
-	catch (std::logic_error const &e)
+	catch (...)
 	{
-		std::cout << "Error! " << e.what() << std::endl;
+		std::cout << "Error! " << std::endl;
+		return EXIT_FAILURE;
 	}
     return EXIT_SUCCESS;
 }
