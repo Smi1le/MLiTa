@@ -26,6 +26,16 @@
 
 using namespace std;
 
+void CheckingValidatyData(int divider, int firstElementSequence, int itemNumberToSearch)
+{
+	if (divider <= 0 || divider > 10000 ||
+		firstElementSequence < 0 || firstElementSequence > divider ||
+		itemNumberToSearch < 2 || itemNumberToSearch > 2 * pow(10, 9))
+	{
+		throw(invalid_argument("Incorrect Data"));
+	}
+}
+
 shared_ptr<CSequence> ReadDataFromFile(string const &fileName)
 {
 	ifstream inputFile(fileName);
@@ -33,13 +43,21 @@ shared_ptr<CSequence> ReadDataFromFile(string const &fileName)
 	{
 		throw(std::logic_error("Input file not found"));
 	}
-	int divider;
-	int itemNumberToSearch;
-	int firstElementSequence;
-	inputFile >> divider;
-	inputFile >> itemNumberToSearch;
-	inputFile >> firstElementSequence;
-	return make_shared<CSequence>(divider, itemNumberToSearch, firstElementSequence);
+	try
+	{
+		int divider;
+		int itemNumberToSearch;
+		int firstElementSequence;
+		inputFile >> divider;
+		inputFile >> itemNumberToSearch;
+		inputFile >> firstElementSequence;
+		CheckingValidatyData(divider, firstElementSequence, itemNumberToSearch);
+		return make_shared<CSequence>(divider, itemNumberToSearch, firstElementSequence);
+	}
+	catch (...)
+	{
+		throw;
+	}
 }
 
 void OutputInFile(string const &fileName, int number)
@@ -59,7 +77,6 @@ int main(int argc, char *argv[])
 	{
 		shared_ptr<CSequence> sequence;
 		sequence = ReadDataFromFile(argv[1]);
-		sequence->CheckingValidatyData();
 		OutputInFile(argv[2], sequence->GetRightSequenceElement());
 	}
 	catch (logic_error const &e)

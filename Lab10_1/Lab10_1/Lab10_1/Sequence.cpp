@@ -53,14 +53,14 @@ int CSequence::GetRightSequenceElement()
 		}
 		else
 		{
-			int positionDesiredItem = m_itemNumberToSearch - (2 + (passesNumber * (m_numbers.size())));
+			int positionDesiredItem = m_itemNumberToSearch - static_cast<int>(2 + (passesNumber * (m_numbers.size())));
 			if (positionDesiredItem == 0)
 			{
 				return m_numbers[m_numbers.size() - 1];
 			}
 			else if (positionDesiredItem < 0)
 			{
-				positionDesiredItem = m_itemNumberToSearch - (2 + ((passesNumber - 1) * (m_numbers.size())));
+				positionDesiredItem = m_itemNumberToSearch - static_cast<int>(2 + ((passesNumber - 1) * (m_numbers.size())));
 				return m_numbers[positionDesiredItem - 1];
 			}
 			else
@@ -72,15 +72,5 @@ int CSequence::GetRightSequenceElement()
 	else
 	{
 		return m_firstElementSequence == 0 ? 0 : 1;
-	}
-}
-
-void CSequence::CheckingValidatyData() const
-{
-	if (m_divider <= 0 || m_divider > 10000 ||
-		m_firstElementSequence < 0 || m_firstElementSequence > m_divider ||
-		m_itemNumberToSearch < 2 || m_itemNumberToSearch > 2 * pow(10, 9))
-	{
-		throw(invalid_argument("Incorrect Data"));
 	}
 }
