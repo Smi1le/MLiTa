@@ -1,0 +1,22 @@
+dictionary = {}
+
+text_file = open("dictionary.txt", "r", encoding = 'utf-8')
+
+for lines in text_file.readlines():
+del_feature = lines.strip().split(' - ')
+future_value = del_feature[0]
+future_keys = del_feature[1].split(', ')
+for keys in future_keys:
+if keys in dictionary:
+dictionary[keys].append(future_value)
+else:
+dictionary[keys] = [future_value]
+text_file.close()
+
+text_file2 = open("new_dictionary.txt", "w", encoding = 'utf-8')
+a = dictionary.keys()
+a = list(a)
+a.sort()
+for i in a:
+d = i + "-" + ", ".join(dictionary[i]) + "\n"
+text_file2.write(d)
