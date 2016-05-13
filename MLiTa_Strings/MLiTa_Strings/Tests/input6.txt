@@ -20,3 +20,10 @@ a.sort()
 for i in a:
 d = i + "-" + ", ".join(dictionary[i]) + "\n"
 text_file2.write(d)
+
+"""string myString1 = "This is the first line of my string.\n" +
+                   "This is the second line of my string.\n" +
+                   "This is the third line of the string.\n";
+string myString2 = @"This is the first line of my string.
+This is the second line of my string.
+This is the third line of the string.";"""
