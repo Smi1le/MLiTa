@@ -26,10 +26,11 @@ bool CTextProcessor::CheckCorrectnessText()
 	size_t i = 0;
 	stack<char> st;
 	bool multilineComment = false;
+	bool multilineLiteral = false;
 	for (auto const &l : m_text)
 	{
 		boost::string_ref textString(l);
-		if (!CheckCorrectnessString(textString, st, static_cast<int>(i), multilineComment))
+		if (!CheckCorrectnessString(textString, st, static_cast<int>(i), multilineComment, multilineLiteral))
 		{
 			return false;
 		}
@@ -38,16 +39,28 @@ bool CTextProcessor::CheckCorrectnessText()
 	return true;
 }
 
-bool CTextProcessor::CheckCorrectnessString(boost::string_ref const &element, stack<char> &st, int i, bool &multilineComment)
+bool CTextProcessor::CheckCorrectnessString(boost::string_ref const &element, stack<char> &st,
+	int i, bool &multilineComment, bool &multilineLiteral)
 {
 	string lit;
 	int number = 1;
 	for (size_t j = 0; j != element.size(); ++j)
 	{
 		lit = lit + element[j];
+		
 		if (number == 3 && (lit == R"(""")"))
 		{
 			multilineComment = multilineComment ? false : true;
+		}
+		if (!multilineComment &&
+			((j > 0) && ((element[j - 1] == '\'' && element[j] != '\'') ||
+			(element[j - 1] == '\"' && element[j] != '\"'))))
+		{
+			multilineLiteral = !multilineLiteral;
+		}
+		if (multilineLiteral)
+		{
+			continue;
 		}
 		if (!multilineComment && element[j] == '#')
 		{
@@ -66,6 +79,7 @@ bool CTextProcessor::CheckCorrectnessString(boost::string_ref const &element, st
 				return false;
 			}
 		}
+		
 		if (j < element.size() && element[j + 1] == element[j])
 		{
 			++number;
@@ -84,10 +98,6 @@ bool CTextProcessor::CheckCorrectnessString(boost::string_ref const &element, st
 	return true;
 }
 
-bool CTextProcessor::CheckOnMultilineComment(int number, string const &lit, bool const &mc, boost::string_ref const &element, int j)
-{
-	
-}
 
 bool CTextProcessor::CheckCorrectnessBrackets(char element, stack<char> &st, int i, int j)
 {

@@ -21,9 +21,10 @@ public:
 	std::pair<int, int> GetTestResult();
 private:
 	bool CheckCorrectnessBrackets(char element, std::stack<char> &st, int i, int j);
-	bool CheckCorrectnessString(boost::string_ref const &element, std::stack<char> &st, int i, bool &multilineComment);
+	bool CheckCorrectnessString(boost::string_ref const &element, std::stack<char> &st,
+		int i, bool &multilineComment, bool &multilineLiteral);
 	bool CheckCorrectnessText();
-	bool CheckOnMultilineComment(int number, std::string const &lit, bool const &mc, boost::string_ref const &element, int j);
+
 	std::vector<std::pair<int, int>> m_bracketsPositions;
 	std::map<char, char> m_brackets;
 	std::vector<std::string> m_text;
