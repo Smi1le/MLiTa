@@ -11,14 +11,7 @@ CSequence::CSequence(int divider, int itemNumberToSearch, int firstElement)
 
 bool CSequence::NumberIncludedInVector(int numberForVerification) const
 {
-	for (auto element : m_numbers)
-	{
-		if (numberForVerification == element)
-		{
-			return true;
-		}
-	}
-	return false;
+	return (0 == std::count(m_numbers.begin(), m_numbers.end(), numberForVerification));
 }
 
 void CSequence::FillingVectorNumbers()
@@ -48,7 +41,7 @@ int CSequence::GetRightSequenceElement()
 		size_t passesNumber = m_itemNumberToSearch / (m_numbers.size());
 		if (passesNumber == 0)
 		{
-			//Так как элементы вектора считаются с 0 позиции то -1 ,а так как первые два элемента не считаются то -2
+			//Так как элементы вектора считаются с 0 позиции то -1 ,а так как первые два элемента не считаются то -3
 			return m_numbers[m_itemNumberToSearch - 3];
 		}
 		else

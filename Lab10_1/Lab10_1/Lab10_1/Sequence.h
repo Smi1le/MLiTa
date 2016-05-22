@@ -4,7 +4,11 @@
 #include <fstream>
 #include <vector>
 
-enum TypeError { ALL_IS_SUCCESS, ERROR, INCORRECTLY_CALLED_COMMAND } const;
+enum TypeError
+	{ ALL_IS_SUCCESS
+	, ERROR
+	, INCORRECTLY_CALLED_COMMAND
+};
 
 
 class CSequence

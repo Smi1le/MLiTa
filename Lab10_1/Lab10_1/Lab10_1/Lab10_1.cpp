@@ -26,7 +26,7 @@
 
 using namespace std;
 
-void CheckingValidatyData(int divider, int firstElementSequence, int itemNumberToSearch)
+bool CheckingValidatyData(int divider, int firstElementSequence, int itemNumberToSearch)
 {
 	if (divider <= 0 || divider > 10000 ||
 		firstElementSequence < 0 || firstElementSequence > divider ||
@@ -79,9 +79,9 @@ int main(int argc, char *argv[])
 		sequence = ReadDataFromFile(argv[1]);
 		OutputInFile(argv[2], sequence->GetRightSequenceElement());
 	}
-	catch (logic_error const &e)
+	catch (...)
 	{
-		cerr << "Error!" << e.what() << endl;
+		cerr << "Error!" << endl;
 		return TypeError::ERROR;
 	}
     return TypeError::ALL_IS_SUCCESS;
