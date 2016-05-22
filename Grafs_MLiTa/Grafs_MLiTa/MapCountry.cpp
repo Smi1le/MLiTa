@@ -2,7 +2,7 @@
 #include "MapCountry.h"
 
 
-void CMapCountry::ConstructionNewRoads()
+void CMapCountry::ConstructNewRoads()
 {
 	if (m_numberRoadsLeavingCitys.size() > 2)
 	{
@@ -11,18 +11,18 @@ void CMapCountry::ConstructionNewRoads()
 		{
 			if (first == 0 && m_numberRoadsLeavingCitys[i] == 1)
 			{
-				first = i + 1;
+				first = static_cast<int>(i) + 1;
 			}
 			else if (m_numberRoadsLeavingCitys[i] == 1)
 			{
 				m_newRoads.push_back({ first, static_cast<int>(i) + 1 });
-				first = i + 1;
+				first = static_cast<int>(i) + 1;
 			}
 		}
 	}
 }
 
-std::vector<Pair> CMapCountry::GetListNewRoads() const
+std::vector<SRoard> CMapCountry::GetNewRoadsList() const
 {
 	return m_newRoads;
 }

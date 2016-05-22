@@ -29,12 +29,13 @@
 
 using namespace std;
 
-void CheckingValidatyData(int Ai, int Bi, int N)
+bool ValidateRoad(int fromCity, int toCity, size_t N)
 {
-	if (Ai < 1 || Bi > N)
+	if (fromCity < 1 || toCity > N)
 	{
-		throw(invalid_argument("Incorrect Data"));
+		return false;
 	}
+	return true;
 }
 
 vector<int> LoadDataFromFile(string const &fileName)
@@ -44,42 +45,41 @@ vector<int> LoadDataFromFile(string const &fileName)
 	{
 		throw(std::logic_error("Input file not found"));
 	}
-	try
+	vector<int> numberRoads;
+	size_t size;
+	file >> size;
+	if (size < 2 || size > pow(10, 5))
 	{
-		vector<int> numberRoads;
-		size_t size;
-		file >> size;
-		if (size < 2 || size > pow(10, 5))
+		throw(invalid_argument("Incorrect Data"));
+	}
+	numberRoads.resize(size, 0);
+	while (!file.eof())
+	{
+		int lCity = 0;
+		int rCity = 0;
+		file >> lCity;
+		file >> rCity;
+		if (ValidateRoad(lCity, rCity, size))
 		{
-			throw(invalid_argument("Incorrect Data"));
-		}
-		numberRoads.resize(size, 0);
-		while (!file.eof())
-		{
-			int lCity = 0;
-			int rCity = 0;
-			file >> lCity;
-			file >> rCity;
-			CheckingValidatyData(lCity, rCity, size);
 			++numberRoads[lCity - 1];
 			++numberRoads[rCity - 1];
 		}
-		return numberRoads;
+		else
+		{
+			throw(invalid_argument("Incorrect Data"));
+		}
 	}
-	catch (...)
-	{
-		throw;
-	}
+	return numberRoads;
 }
 
-void Filing(CMapCountry const &mapCountry, string const &fileName)
+void OutputToFile(CMapCountry const &mapCountry, string const &fileName)
 {
 	ofstream file(fileName);
-	auto listNewRoads = mapCountry.GetListNewRoads();
+	auto listNewRoads = mapCountry.GetNewRoadsList();
 	file << listNewRoads.size() << "\n";
 	for (auto element : listNewRoads)
 	{
-		file << element.first << " " << element.second << "\n";
+		file << element.from << " " << element.to << "\n";
 	}
 }
 
@@ -95,13 +95,12 @@ int main(int argc, char *argv[])
 	try
 	{
 		CMapCountry mapCountry(LoadDataFromFile(argv[1]));
-		mapCountry.ConstructionNewRoads();
-		Filing(mapCountry, argv[2]);
+		mapCountry.ConstructNewRoads();
+		OutputToFile(mapCountry, argv[2]);
 		return TypeError::ALL_IS_SUCCESS;
 	}
-	catch (std::logic_error const &e)
+	catch (...)
 	{
-		cerr << "Error!" << e.what() << endl;
 		return TypeError::ERROR;
 	}
 }

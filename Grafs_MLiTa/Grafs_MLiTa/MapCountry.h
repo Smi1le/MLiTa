@@ -12,10 +12,10 @@ enum TypeError
 	, INCORRECTLY_CALLED_COMMAND
 };
 
-struct Pair
+struct SRoard
 {
-	int first;
-	int second;
+	int from;
+	int to;
 };
 
 
@@ -25,9 +25,9 @@ public:
 	CMapCountry(std::vector<int> const &numberRoads)
 		: m_numberRoadsLeavingCitys(numberRoads)
 	{}
-	void ConstructionNewRoads();
-	std::vector<Pair> GetListNewRoads() const;
+	void ConstructNewRoads();
+	std::vector<SRoard> GetNewRoadsList() const;
 private:
 	std::vector<int> m_numberRoadsLeavingCitys;
-	std::vector<Pair> m_newRoads;
+	std::vector<SRoard> m_newRoads;
 };
