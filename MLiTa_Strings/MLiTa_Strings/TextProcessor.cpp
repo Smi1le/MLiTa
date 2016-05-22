@@ -46,11 +46,11 @@ bool CTextProcessor::CheckCorrectnessString(boost::string_ref const &element, st
 	int number = 1;
 	for (size_t j = 0; j != element.size(); ++j)
 	{
-		lit = lit + element[j];
+		lit += element[j];
 		
 		if (number == 3 && (lit == R"(""")"))
 		{
-			multilineComment = multilineComment ? false : true;
+			multilineComment = !multilineComment;
 		}
 		if (!multilineComment &&
 			((j > 0) && ((element[j - 1] == '\'' && element[j] != '\'') ||
