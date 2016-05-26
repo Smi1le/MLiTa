@@ -19,14 +19,14 @@ struct Node
 	bool wasPassed = false;
 };
 
-class CDominoHelper
+class CDomino
 {
 public:
-	CDominoHelper(std::vector<Node> const &set)
+	CDomino(std::vector<Node> const &set)
 		:m_setDominoes(set)
 	{}
-	void BuildingPaths(std::vector<Node> &nodes);
-	Node SearchFirstMaxDomino(Node const &max = Node(-1, -1, false));
+	void BuildPaths(std::vector<Node> &nodes);
+	Node SearchFirstMaxDomino();
 	std::vector<Node> GetBestPath() const;
 private:
 	std::vector<Node> m_setDominoes;

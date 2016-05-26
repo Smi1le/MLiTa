@@ -16,7 +16,7 @@ vector<Node> ReadFromFile(string const &fileName)
 	}
 	int number;
 	file >> number;
-	if (number > 20)
+	if (number > 20 || number < 2)
 	{
 		throw logic_error("out of range (2 <= N <= 20).");
 	}
@@ -27,7 +27,8 @@ vector<Node> ReadFromFile(string const &fileName)
 		{
 			throw logic_error("incorrectly set the pair of dominoes bones.");
 		}
-		if (node.first > 6 || node.second > 6)
+		if ((node.first > 6 && node.first < 0)|| 
+			(node.second > 6 && node.second < 0))
 		{
 			throw logic_error("out of range (0 <= X, Y <= 6).");
 		}
@@ -36,10 +37,10 @@ vector<Node> ReadFromFile(string const &fileName)
 	return setDominoes;
 }
 
-void Output(CDominoHelper const &helper, string const &fileName)
+void OutputInFile(CDomino const &helper, string const &fileName)
 {
 	ofstream file(fileName);
-	for (auto el : helper.GetBestPath())
+	for (auto const &el : helper.GetBestPath())
 	{
 		file << el.first << el.second;
 	}
@@ -54,11 +55,11 @@ int main(int argc, char *argv[])
 	}
 	try
 	{
-		CDominoHelper helper(ReadFromFile(argv[1]));
+		CDomino domino(ReadFromFile(argv[1]));
 		vector<Node> paths;
-		paths.push_back(helper.SearchFirstMaxDomino());
-		helper.BuildingPaths(paths);
-		Output(helper, argv[2]);
+		paths.push_back(domino.SearchFirstMaxDomino());
+		domino.BuildPaths(paths);
+		OutputInFile(domino, argv[2]);
 		return EXIT_SUCCESS;
 	}
 	catch (logic_error const &e)

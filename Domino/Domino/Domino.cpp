@@ -3,32 +3,34 @@
 
 using namespace std;
 
-Node CDominoHelper::SearchFirstMaxDomino(Node const &max)
+Node CDomino::SearchFirstMaxDomino()
 {
-	Node maxValue = max;
-	size_t number = -1;
-	for (size_t i = 0; i != m_setDominoes.size(); ++i)
+	Node maxValue = m_setDominoes.front();
+	size_t numberPos = 0;
+	for (size_t i = 1; i != m_setDominoes.size(); ++i)
 	{
 		if (m_setDominoes[i].first > m_setDominoes[i].second)
 		{
 			if (m_setDominoes[i].first > maxValue.first
-				|| m_setDominoes[i].first == maxValue.first && m_setDominoes[i].second > maxValue.second && !m_setDominoes[i].wasPassed)
+				|| m_setDominoes[i].first == maxValue.first && 
+				(m_setDominoes[i].second > maxValue.second) && !m_setDominoes[i].wasPassed)
 			{
 				maxValue = m_setDominoes[i];
-				number = i;
+				numberPos = i;
 			}
 		}
 		else
 		{
 			if (m_setDominoes[i].second > maxValue.second
-				|| m_setDominoes[i].second == maxValue.second && m_setDominoes[i].first > maxValue.first && !m_setDominoes[i].wasPassed)
+				|| m_setDominoes[i].second == maxValue.second && 
+				(m_setDominoes[i].first > maxValue.first) && !m_setDominoes[i].wasPassed)
 			{
 				maxValue = m_setDominoes[i];
-				number = i;
+				numberPos = i;
 			}
 		}
 	}
-	m_setDominoes.erase(m_setDominoes.begin() + number);
+	m_setDominoes.erase(m_setDominoes.begin() + numberPos);
 	if (maxValue.first < maxValue.second)
 	{
 		return{ maxValue.second, maxValue.first, false };
@@ -36,7 +38,7 @@ Node CDominoHelper::SearchFirstMaxDomino(Node const &max)
 	return maxValue;
 }
 
-vector<Node> CDominoHelper::GetBestPath() const
+vector<Node> CDomino::GetBestPath() const
 {
 	size_t number = 0;
 	size_t size = 0;
@@ -52,7 +54,7 @@ vector<Node> CDominoHelper::GetBestPath() const
 }
 
 
-void CDominoHelper::BuildingPaths(vector<Node> &nodes)
+void CDomino::BuildPaths(vector<Node> &nodes)
 {
 	int key;
 	if (nodes.size() == 1)
@@ -70,14 +72,14 @@ void CDominoHelper::BuildingPaths(vector<Node> &nodes)
 		{
 			m_setDominoes[i].wasPassed = true;
 			nodes.push_back(m_setDominoes[i]);
-			BuildingPaths(nodes);
+			BuildPaths(nodes);
 			m_setDominoes[i].wasPassed = false;
 		}
 		else if (m_setDominoes[i].second == key && !m_setDominoes[i].wasPassed)
 		{
 			nodes.push_back({ m_setDominoes[i].second, m_setDominoes[i].first, true });
 			m_setDominoes[i].wasPassed = true;
-			BuildingPaths(nodes);
+			BuildPaths(nodes);
 			m_setDominoes[i].wasPassed = false;
 		}
 	}
